@@ -1,4 +1,10 @@
 basePath: /api/v1
+definitions:
+  handlers.HealthResponse:
+    properties:
+      status:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -39,8 +45,6 @@ paths:
       - chat
   /health:
     get:
-      consumes:
-      - application/json
       description: Returns server status check
       produces:
       - application/json
@@ -48,17 +52,9 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              additionalProperties:
-                type: string
-              type: object
-            type: array
+            $ref: '#/definitions/handlers.HealthResponse'
         "500":
           description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
       summary: Get service health check status
       tags:
       - health

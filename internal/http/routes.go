@@ -2,17 +2,21 @@ package http
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
-	"github.com/igudelj/chat-backend/internal/http/handlers"
+	"github.com/igudelj/chat-backend/internal/http/router"
 )
 
 func RegisterRoutes(app *fiber.App) {
-	api := app.Group("/api/v1")
+	// Non-versioned routes
+	(&router.SwaggerRouter{}).Register(app)
 
-	api.Get("/health", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{"status": "ok"})
-	})
+	// rest of the routes
+	apiV1 := app.Group("/api/v1")
+	routers := []router.Router{
+		&router.HealthRouter{},
+		&router.ChatRouter{},
+	}
 
-	app.Get("/swagger/*", swagger.HandlerDefault)
-	api.Get("/chat/messages", handlers.GetMessages)
+	for _, r := range routers {
+		r.Register(apiV1)
+	}
 }
