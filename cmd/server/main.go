@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
+	"os"
 
-	"github.com/gofiber/fiber/v2"
 	_ "github.com/igudelj/chat-backend/docs"
-	"github.com/igudelj/chat-backend/internal/http"
+	"github.com/igudelj/chat-backend/internal/app"
 )
 
 // @title Chat Backend API
@@ -22,15 +22,13 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	app := fiber.New()
-
-	http.RegisterRoutes(app)
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{"status": "running"})
-	})
-
-	if err := app.Listen(":8080"); err != nil {
-		log.Fatal(err)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 	}
+
+	app := app.New()
+
+	log.Printf("Starting server on :%s", port)
+	log.Fatal(app.Listen(":" + port))
 }
