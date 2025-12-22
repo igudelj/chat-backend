@@ -27,8 +27,8 @@ func main() {
 		port = "8080"
 	}
 
-	app := app.New()
+	server := app.New()
 
 	log.Printf("Starting server on :%s", port)
-	log.Fatal(app.Listen(":" + port))
+	log.Fatal(server.Listen(":" + port))
 }
