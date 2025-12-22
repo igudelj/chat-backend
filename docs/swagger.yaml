@@ -37,4 +37,29 @@ paths:
       summary: Get chat messages
       tags:
       - chat
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Returns server status check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties:
+                type: string
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get service health check status
+      tags:
+      - health
 swagger: "2.0"

@@ -60,6 +60,44 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/health": {
+            "get": {
+                "description": "Returns server status check",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Get service health check status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }`
