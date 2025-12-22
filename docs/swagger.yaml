@@ -1,0 +1,40 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: Backend service for modular chat application
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://example.com/terms/
+  title: Chat Backend API
+  version: "1.0"
+paths:
+  /chat/messages:
+    get:
+      consumes:
+      - application/json
+      description: Returns recent chat messages
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties:
+                type: string
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get chat messages
+      tags:
+      - chat
+swagger: "2.0"
