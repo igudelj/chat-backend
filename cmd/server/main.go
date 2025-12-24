@@ -27,7 +27,15 @@ func main() {
 		port = "8080"
 	}
 
-	server := app.New()
+	server, db, err := app.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("failed to close database: %v", err)
+		}
+	}()
 
 	log.Printf("Starting server on :%s", port)
 	log.Fatal(server.Listen(":" + port))
