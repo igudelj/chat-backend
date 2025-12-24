@@ -31,3 +31,6 @@ http://localhost:8080
 
 # Swagger docs:
 http://localhost:8080/swagger/index.html#
+
+## Parameters:
+Port=xxxx (8080 used if none are passed)
