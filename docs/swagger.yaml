@@ -1,8 +1,43 @@
 basePath: /api/v1
 definitions:
+  entities.Message:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      receiver_id:
+        type: string
+      sender_id:
+        type: string
+    type: object
+  entities.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
   handlers.HealthResponse:
     properties:
       status:
+        type: string
+    type: object
+  message.sendMessageRequest:
+    properties:
+      content:
+        type: string
+      receiver_id:
+        type: string
+      sender_id:
         type: string
     type: object
 host: localhost:8080
@@ -22,7 +57,28 @@ paths:
     get:
       consumes:
       - application/json
-      description: Returns recent chat messages
+      description: Returns messages between two users
+      parameters:
+      - description: User A ID
+        in: query
+        name: user_a
+        required: true
+        type: string
+      - description: User B ID
+        in: query
+        name: user_b
+        required: true
+        type: string
+      - default: 50
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:
@@ -30,10 +86,14 @@ paths:
           description: OK
           schema:
             items:
-              additionalProperties:
-                type: string
-              type: object
+              $ref: '#/definitions/entities.Message'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
@@ -41,6 +101,31 @@ paths:
               type: string
             type: object
       summary: Get chat messages
+      tags:
+      - chat
+    post:
+      consumes:
+      - application/json
+      description: Sends a text message
+      parameters:
+      - description: Message payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/message.sendMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.Message'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Send a message
       tags:
       - chat
   /health:
@@ -58,4 +143,58 @@ paths:
       summary: Get service health check status
       tags:
       - health
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Returns a user by email
+      parameters:
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get user by email
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get user by ID
+      tags:
+      - users
 swagger: "2.0"

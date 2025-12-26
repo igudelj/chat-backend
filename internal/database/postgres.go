@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/igudelj/chat-backend/internal/config"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func PostgresInstance(config config.DatabaseConfig) (*sql.DB, error) {

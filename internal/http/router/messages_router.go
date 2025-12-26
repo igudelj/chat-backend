@@ -2,11 +2,20 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/igudelj/chat-backend/internal/http/handlers"
+	messagehandler "github.com/igudelj/chat-backend/internal/http/handlers/message"
 )
 
-type ChatRouter struct{}
+type MessagesRouter struct {
+	messageHandler *messagehandler.Handler
+}
 
-func (r *ChatRouter) Register(api fiber.Router) {
-	api.Get("/chat/messages", handlers.GetMessages)
+func NewMessagesRouter(handler *messagehandler.Handler) *MessagesRouter {
+	return &MessagesRouter{
+		messageHandler: handler,
+	}
+}
+
+func (r *MessagesRouter) Register(api fiber.Router) {
+	api.Get("/chat/messages", r.messageHandler.GetMessages)
+	api.Post("/chat/messages", r.messageHandler.SendMessage)
 }

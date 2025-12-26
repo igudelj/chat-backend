@@ -19,7 +19,7 @@ func New() (*fiber.App, *sql.DB, error) {
 		return nil, nil, err
 	}
 
-	http.RegisterRoutes(app)
+	http.RegisterRoutes(app, db)
 
 	return app, db, nil
 }

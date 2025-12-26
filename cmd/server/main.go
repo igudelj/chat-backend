@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/igudelj/chat-backend/docs"
 	"github.com/igudelj/chat-backend/internal/app"
+	"github.com/igudelj/chat-backend/internal/config"
 )
 
 // @title Chat Backend API
@@ -22,6 +23,7 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
+	config.LoadEnvironment()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
