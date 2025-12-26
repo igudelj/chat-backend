@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"os"
 )
 
@@ -21,15 +20,6 @@ func LoadDatabaseConfig() DatabaseConfig {
 		User:     os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
 	}
-
-	log.Printf(
-		"DB config: host=%s port=%s name=%s user=%s password_set=%t",
-		config.Host,
-		config.Port,
-		config.Name,
-		config.User,
-		config.Password != "",
-	)
 
 	if config.Host == "" || config.Port == "" || config.Name == "" || config.User == "" {
 		panic("database configuration is incomplete")
