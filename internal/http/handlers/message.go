@@ -92,7 +92,7 @@ func (h *MessageHandler) SendMessage(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid receiver_id")
 	}
 
-	if err, _ := h.service.Send(c.Context(), senderID, receiverID, req.Content); err != nil {
+	if _, err := h.service.Send(c.Context(), senderID, receiverID, req.Content); err != nil {
 		return fiber.ErrInternalServerError
 	}
 
