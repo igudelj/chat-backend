@@ -1,4 +1,4 @@
-package message
+package handlers
 
 import (
 	"strconv"
@@ -9,12 +9,12 @@ import (
 	messageservice "github.com/igudelj/chat-backend/internal/services/message"
 )
 
-type Handler struct {
+type MessageHandler struct {
 	service messageservice.Service
 }
 
-func New(service messageservice.Service) *Handler {
-	return &Handler{service: service}
+func NewMessageHandler(service messageservice.Service) *MessageHandler {
+	return &MessageHandler{service: service}
 }
 
 // GetMessages godoc
@@ -31,7 +31,7 @@ func New(service messageservice.Service) *Handler {
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /chat/messages [get]
-func (h *Handler) GetMessages(c *fiber.Ctx) error {
+func (h *MessageHandler) GetMessages(c *fiber.Ctx) error {
 	userA, err := uuid.Parse(c.Query("user_a"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid user_a")
@@ -76,7 +76,7 @@ type sendMessageRequest struct {
 // @Failure 400
 // @Failure 500
 // @Router /chat/messages [post]
-func (h *Handler) SendMessage(c *fiber.Ctx) error {
+func (h *MessageHandler) SendMessage(c *fiber.Ctx) error {
 	var req sendMessageRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid request body")

@@ -2,14 +2,14 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	messagehandler "github.com/igudelj/chat-backend/internal/http/handlers/message"
+	messagehandler "github.com/igudelj/chat-backend/internal/http/handlers"
 )
 
 type MessagesRouter struct {
-	messageHandler *messagehandler.Handler
+	messageHandler *messagehandler.MessageHandler
 }
 
-func NewMessagesRouter(handler *messagehandler.Handler) *MessagesRouter {
+func NewMessagesRouter(handler *messagehandler.MessageHandler) *MessagesRouter {
 	return &MessagesRouter{
 		messageHandler: handler,
 	}

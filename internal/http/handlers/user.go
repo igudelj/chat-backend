@@ -1,4 +1,4 @@
-package user
+package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -6,12 +6,12 @@ import (
 	userservice "github.com/igudelj/chat-backend/internal/services/user"
 )
 
-type Handler struct {
+type UserHandler struct {
 	service userservice.Service
 }
 
-func New(service userservice.Service) *Handler {
-	return &Handler{service: service}
+func NewUserHandler(service userservice.Service) *UserHandler {
+	return &UserHandler{service: service}
 }
 
 // Search godoc
@@ -28,7 +28,7 @@ func New(service userservice.Service) *Handler {
 // @Failure 404
 // @Failure 500
 // @Router /users [get]
-func (h *Handler) Search(c *fiber.Ctx) error {
+func (h *UserHandler) Search(c *fiber.Ctx) error {
 	query := c.Queries()
 
 	if len(query) == 0 {
@@ -85,7 +85,7 @@ type createUserRequest struct {
 // @Failure 400
 // @Failure 500
 // @Router /users [post]
-func (h *Handler) CreateUser(c *fiber.Ctx) error {
+func (h *UserHandler) CreateUser(c *fiber.Ctx) error {
 	var req createUserRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid request body")
