@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/igudelj/chat-backend/internal/entities"
 )
 
@@ -33,60 +33,35 @@ func (r *postgresRepository) Create(ctx context.Context, user *entities.User) er
 	).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
 }
 
-func (r *postgresRepository) GetByID(ctx context.Context, id uuid.UUID) (*entities.User, error) {
-	query := `
+func (r *postgresRepository) GetByField(
+	ctx context.Context,
+	field entities.UserSearchField,
+	value any,
+) (*entities.User, error) {
+	query := fmt.Sprintf(`
 		SELECT id, username, email, password_hash, created_at, updated_at
 		FROM users
-		WHERE id = $1
-	`
+		WHERE %s = $1
+	`, field)
 
-	var user entities.User
-	err := r.db.QueryRowContext(ctx, query, id).
-		Scan(
-			&user.ID,
-			&user.Username,
-			&user.Email,
-			&user.PasswordHash,
-			&user.CreatedAt,
-			&user.UpdatedAt,
-		)
+	row := r.db.QueryRowContext(ctx, query, value)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
+	user := &entities.User{}
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.Email,
+		&user.PasswordHash,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
-	return &user, nil
-}
-
-func (r *postgresRepository) GetByEmail(ctx context.Context, email string) (*entities.User, error) {
-	query := `
-		SELECT id, username, email, password_hash, created_at, updated_at
-		FROM "users"
-		WHERE email = $1
-	`
-
-	var user entities.User
-	err := r.db.QueryRowContext(ctx, query, email).
-		Scan(
-			&user.ID,
-			&user.Username,
-			&user.Email,
-			&user.PasswordHash,
-			&user.CreatedAt,
-			&user.UpdatedAt,
-		)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &user, nil
+	return user, nil
 }

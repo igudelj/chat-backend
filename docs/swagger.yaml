@@ -40,6 +40,15 @@ definitions:
       sender_id:
         type: string
     type: object
+  user.createUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -147,12 +156,19 @@ paths:
     get:
       consumes:
       - application/json
-      description: Returns a user by email
+      description: Search users by a single field (id, email, username)
       parameters:
+      - description: User ID (UUID)
+        in: query
+        name: id
+        type: string
       - description: User email
         in: query
         name: email
-        required: true
+        type: string
+      - description: Username
+        in: query
+        name: username
         type: string
       produces:
       - application/json
@@ -167,34 +183,32 @@ paths:
           description: Not Found
         "500":
           description: Internal Server Error
-      summary: Get user by email
+      summary: Search users
       tags:
-      - users
-  /users/{id}:
-    get:
+      - user
+    post:
       consumes:
       - application/json
-      description: Returns a user by ID
+      description: Creates a new user and returns the created object.
       parameters:
-      - description: User ID
-        in: path
-        name: id
+      - description: Create user payload
+        in: body
+        name: request
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/user.createUserRequest'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/entities.User'
         "400":
           description: Bad Request
-        "404":
-          description: Not Found
         "500":
           description: Internal Server Error
-      summary: Get user by ID
+      summary: Create user
       tags:
-      - users
+      - user
 swagger: "2.0"

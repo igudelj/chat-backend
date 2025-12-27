@@ -23,6 +23,9 @@ Add: \
 Environment variables: \
 APP_ENV=dev
 
+# Start docker:
+docker compose up -d
+
 # Run server
 go run cmd/server/main.go
 

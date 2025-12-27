@@ -14,6 +14,6 @@ func NewUsersRouter(handler *usershandler.Handler) *UsersRouter {
 }
 
 func (r *UsersRouter) Register(api fiber.Router) {
-	api.Get("/users/:id", r.usersHandler.GetByID)
-	api.Get("/users", r.usersHandler.GetByEmail)
+	api.Get("/users", r.usersHandler.Search)
+	api.Post("/users", r.usersHandler.CreateUser)
 }

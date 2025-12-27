@@ -160,7 +160,7 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
-                "description": "Returns a user by email",
+                "description": "Search users by a single field (id, email, username)",
                 "consumes": [
                     "application/json"
                 ],
@@ -168,16 +168,27 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "user"
                 ],
-                "summary": "Get user by email",
+                "summary": "Search users",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID (UUID)",
+                        "name": "id",
+                        "in": "query"
+                    },
                     {
                         "type": "string",
                         "description": "User email",
                         "name": "email",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -197,11 +208,9 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "Returns a user by ID",
+            },
+            "post": {
+                "description": "Creates a new user and returns the created object.",
                 "consumes": [
                     "application/json"
                 ],
@@ -209,30 +218,29 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "user"
                 ],
-                "summary": "Get user by ID",
+                "summary": "Create user",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Create user payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.createUserRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/entities.User"
                         }
                     },
                     "400": {
                         "description": "Bad Request"
-                    },
-                    "404": {
-                        "description": "Not Found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -300,6 +308,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "sender_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.createUserRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
