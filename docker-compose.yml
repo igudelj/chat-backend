@@ -10,13 +10,51 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
-      - ./migrations:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U chat_admin -d chat"]
       interval: 5s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 20
+
+  liquibase:
+    image: liquibase/liquibase
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./db/migrations:/liquibase/changelog
+      - ./lib:/liquibase/lib
+    environment:
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres:5432/chat
+      LIQUIBASE_COMMAND_USERNAME: chat_admin
+      LIQUIBASE_COMMAND_PASSWORD: chat_admin
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog.yaml
+    command: update
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: chat-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_DATABASE: chat
+      KC_DB_URL_PORT: 5432
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_DB_SCHEMA: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+      - liquibase
+    volumes:
+      - keycloak_data:/opt/keycloak/data
 
 volumes:
   postgres_data:
+  keycloak_data:

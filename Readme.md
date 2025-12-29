@@ -23,6 +23,11 @@ Add: \
 Environment variables: \
 APP_ENV=dev
 
+# liquibase database setup (optional):
+1. download odbc driver: https://www.postgresql.org/download/
+2. Change the location of the driver jar file appropriately. Current one was used due to the versions of the database etc. 
+(line 28 in the docker-compose.yml)
+
 # Start docker:
 docker compose up -d
 
@@ -32,8 +37,12 @@ go run cmd/server/main.go
 # Server address:
 http://localhost:8080
 
-# Swagger docs:
+# Swagger docs address:
 http://localhost:8080/swagger/index.html#
+
+# Keycloak address:
+http://localhost:8081
+http://localhost:8081/admin
 
 ## Parameters:
 Port=xxxx (8080 used if none are passed or set in environment)

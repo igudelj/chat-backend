@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-init-schema
+      author: chat-backend
+      changes:
+        - sqlFile:
+            path: changeset/001_init_schema.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 002-messages
+      author: chat-backend
+      changes:
+        - sqlFile:
+            path: changeset/002_messages.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 003-indexes
+      author: chat-backend
+      changes:
+        - sqlFile:
+            path: changeset/003_indexes.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 004-keycloak-role
+      author: your_name
+      changes:
+        - sqlFile:
+            path: changeset/004_keycloak_role.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false
