@@ -13,10 +13,10 @@ services:
       - ./db/init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U chat_admin -d chat"]
+      test: ["CMD-SHELL", "pg_isready -U chat_admin -d chat -q"]
       interval: 5s
       timeout: 10s
-      retries: 20
+      retries: 30
 
   liquibase:
     image: liquibase/liquibase
@@ -31,7 +31,8 @@ services:
       LIQUIBASE_COMMAND_USERNAME: chat_admin
       LIQUIBASE_COMMAND_PASSWORD: chat_admin
       LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog.yaml
-    command: update
+    command: sh -c "sleep 10 && liquibase update"
+
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
@@ -47,11 +48,15 @@ services:
       KC_DB_SCHEMA: keycloak
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_URL: http://localhost:8081
+      KC_HOSTNAME_STRICT: false
     ports:
       - "8081:8080"
     depends_on:
-      - postgres
-      - liquibase
+      postgres:
+        condition: service_started
+      liquibase:
+        condition: service_started
     volumes:
       - keycloak_data:/opt/keycloak/data
 

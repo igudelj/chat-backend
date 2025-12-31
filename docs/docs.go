@@ -115,7 +115,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/message.sendMessageRequest"
+                            "$ref": "#/definitions/handlers.sendMessageRequest"
                         }
                     }
                 ],
@@ -228,7 +228,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.createUserRequest"
+                            "$ref": "#/definitions/handlers.createUserRequest"
                         }
                     }
                 ],
@@ -298,21 +298,7 @@ const docTemplate = `{
                 }
             }
         },
-        "message.sendMessageRequest": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "receiver_id": {
-                    "type": "string"
-                },
-                "sender_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "user.createUserRequest": {
+        "handlers.createUserRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -322,6 +308,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.sendMessageRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "receiver_id": {
+                    "type": "string"
+                },
+                "sender_id": {
                     "type": "string"
                 }
             }

@@ -109,7 +109,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/message.sendMessageRequest"
+                            "$ref": "#/definitions/handlers.sendMessageRequest"
                         }
                     }
                 ],
@@ -222,7 +222,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.createUserRequest"
+                            "$ref": "#/definitions/handlers.createUserRequest"
                         }
                     }
                 ],
@@ -292,21 +292,7 @@
                 }
             }
         },
-        "message.sendMessageRequest": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "receiver_id": {
-                    "type": "string"
-                },
-                "sender_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "user.createUserRequest": {
+        "handlers.createUserRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -316,6 +302,20 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.sendMessageRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "receiver_id": {
+                    "type": "string"
+                },
+                "sender_id": {
                     "type": "string"
                 }
             }

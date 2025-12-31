@@ -31,22 +31,22 @@ definitions:
       status:
         type: string
     type: object
-  message.sendMessageRequest:
-    properties:
-      content:
-        type: string
-      receiver_id:
-        type: string
-      sender_id:
-        type: string
-    type: object
-  user.createUserRequest:
+  handlers.createUserRequest:
     properties:
       email:
         type: string
       password:
         type: string
       username:
+        type: string
+    type: object
+  handlers.sendMessageRequest:
+    properties:
+      content:
+        type: string
+      receiver_id:
+        type: string
+      sender_id:
         type: string
     type: object
 host: localhost:8080
@@ -122,7 +122,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/message.sendMessageRequest'
+          $ref: '#/definitions/handlers.sendMessageRequest'
       produces:
       - application/json
       responses:
@@ -196,7 +196,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/user.createUserRequest'
+          $ref: '#/definitions/handlers.createUserRequest'
       produces:
       - application/json
       responses:

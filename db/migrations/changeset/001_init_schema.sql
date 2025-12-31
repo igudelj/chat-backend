@@ -1,6 +1,11 @@
 -- Enable UUID generation
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE SCHEMA IF NOT EXISTS public;
+CREATE SCHEMA IF NOT EXISTS keycloak;
+
 -- Users table
 CREATE TABLE users (
                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
