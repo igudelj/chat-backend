@@ -50,6 +50,8 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HOSTNAME_URL: http://localhost:8081
       KC_HOSTNAME_STRICT: false
+      KC_IMPORT: true
+      KC_IMPORT_REALM: chat
     ports:
       - "8081:8080"
     depends_on:
@@ -59,6 +61,7 @@ services:
         condition: service_started
     volumes:
       - keycloak_data:/opt/keycloak/data
+      - ./keycloak:/opt/keycloak/data
 
 volumes:
   postgres_data:
