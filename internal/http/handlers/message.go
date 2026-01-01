@@ -20,6 +20,7 @@ func NewMessageHandler(service messageservice.Service) *MessageHandler {
 // GetMessages godoc
 // @Summary Get chat messages
 // @Description Returns messages between two users
+// @Security BearerAuth
 // @Tags chat
 // @Accept json
 // @Produce json
@@ -68,6 +69,7 @@ type sendMessageRequest struct {
 // SendMessage godoc
 // @Summary Send a message
 // @Description Sends a text message
+// @Security BearerAuth
 // @Tags chat
 // @Accept json
 // @Produce json

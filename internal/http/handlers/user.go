@@ -17,6 +17,7 @@ func NewUserHandler(service userservice.Service) *UserHandler {
 // Search godoc
 // @Summary Search users
 // @Description Search users by a single field (id, email, username)
+// @Security BearerAuth
 // @Tags user
 // @Accept json
 // @Produce json
@@ -77,6 +78,7 @@ type createUserRequest struct {
 // CreateUser godoc
 // @Summary Create user
 // @Description Creates a new user and returns the created object.
+// @Security BearerAuth
 // @Tags user
 // @Accept json
 // @Produce json

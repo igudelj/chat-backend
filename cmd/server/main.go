@@ -22,6 +22,10 @@ import (
 
 // @host localhost:8080
 // @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	config.LoadEnvironment()
 	port := os.Getenv("PORT")
