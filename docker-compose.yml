@@ -23,16 +23,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./db/migrations:/liquibase/changelog
-      - ./lib:/liquibase/lib
     environment:
       LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres:5432/chat
       LIQUIBASE_COMMAND_USERNAME: chat_admin
       LIQUIBASE_COMMAND_PASSWORD: chat_admin
       LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog.yaml
-    command: sh -c "sleep 10 && liquibase update"
-
+    volumes:
+      # Mount the changelog file explicitly and changeset folder
+      - ./db/migrations/changelog.yaml:/liquibase/changelog/changelog.yaml:ro
+      - ./db/migrations/changeset:/liquibase/changelog/changeset:ro
+      - ./lib:/liquibase/lib
+    command: liquibase update
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
