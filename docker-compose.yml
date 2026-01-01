@@ -37,7 +37,9 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
     container_name: chat-keycloak
-    command: start-dev
+    command:
+      - start-dev
+      - --import-realm
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: postgres
@@ -61,7 +63,7 @@ services:
         condition: service_started
     volumes:
       - keycloak_data:/opt/keycloak/data
-      - ./keycloak:/opt/keycloak/data
+      - ./keycloak:/opt/keycloak/data/import
 
 volumes:
   postgres_data:
