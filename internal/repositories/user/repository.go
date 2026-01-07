@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/igudelj/chat-backend/internal/entities"
 )
 
@@ -12,5 +13,9 @@ type Repository interface {
 		ctx context.Context,
 		field entities.UserSearchField,
 		value any,
+	) (*entities.User, error)
+	EnsureFromClaims(
+		ctx context.Context,
+		claims jwt.MapClaims,
 	) (*entities.User, error)
 }

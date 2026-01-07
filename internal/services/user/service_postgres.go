@@ -3,9 +3,9 @@ package user
 import (
 	"context"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/igudelj/chat-backend/internal/entities"
 	"github.com/igudelj/chat-backend/internal/repositories/user"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type service struct {
@@ -23,12 +23,9 @@ func (s *service) Search(ctx context.Context, field entities.UserSearchField, va
 }
 
 func (s *service) Create(ctx context.Context, user *entities.User, password string) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
-	user.PasswordHash = string(hash)
-
 	return s.userRepo.Create(ctx, user)
+}
+
+func (s *service) EnsureCurrentUser(ctx context.Context, claims jwt.MapClaims) (*entities.User, error) {
+	return s.userRepo.EnsureFromClaims(ctx, claims)
 }

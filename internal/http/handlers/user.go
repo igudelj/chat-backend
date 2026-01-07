@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/igudelj/chat-backend/internal/entities"
 	userservice "github.com/igudelj/chat-backend/internal/services/user"
 )
@@ -88,23 +89,26 @@ type createUserRequest struct {
 // @Failure 500
 // @Router /users [post]
 func (h *UserHandler) CreateUser(c *fiber.Ctx) error {
-	var req createUserRequest
-	if err := c.BodyParser(&req); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "invalid request body")
+	claims := c.Locals("claims").(jwt.MapClaims)
+	if claims == nil {
+		return fiber.ErrUnauthorized
 	}
 
-	if req.Username == "" || req.Email == "" || req.Password == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "missing required fields")
-	}
-
-	user := &entities.User{
-		Username: req.Username,
-		Email:    req.Email,
-	}
-
-	err := h.service.Create(c.Context(), user, req.Password)
+	// Ensure the user exists in local DB (or create if missing)
+	user, err := h.service.EnsureCurrentUser(c.Context(), claims)
 	if err != nil {
-		return fiber.ErrInternalServerError
+		return fiber.NewError(fiber.StatusInternalServerError, "failed to ensure user")
+	}
+
+	// Return DB info + Keycloak claims
+	err = c.JSON(fiber.Map{
+		"id":          user.ID,
+		"keycloak_id": user.KeycloakID,
+		"username":    claims["preferred_username"],
+		"email":       claims["email"],
+	})
+	if err != nil {
+		return err
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(user)

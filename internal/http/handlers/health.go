@@ -15,7 +15,7 @@ type HealthResponse struct {
 // @Failure 500
 // @Router /health [get]
 func GetHealth(c *fiber.Ctx) error {
-	return c.JSON(HealthResponse{
+	return c.Status(fiber.StatusOK).JSON(HealthResponse{
 		Status: "ok",
 	})
 }

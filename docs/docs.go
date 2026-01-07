@@ -25,6 +25,11 @@ const docTemplate = `{
     "paths": {
         "/chat/messages": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Returns messages between two users",
                 "consumes": [
                     "application/json"
@@ -97,6 +102,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Sends a text message",
                 "consumes": [
                     "application/json"
@@ -160,6 +170,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Search users by a single field (id, email, username)",
                 "consumes": [
                     "application/json"
@@ -210,6 +225,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Creates a new user and returns the created object.",
                 "consumes": [
                     "application/json"
@@ -276,16 +296,15 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "email": {
+                "id": {
+                    "description": "internal app user ID",
                     "type": "string"
                 },
-                "id": {
+                "keycloak_id": {
+                    "description": "Keycloak sub",
                     "type": "string"
                 },
                 "updated_at": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
@@ -325,6 +344,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
