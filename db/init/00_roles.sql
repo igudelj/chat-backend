@@ -7,11 +7,3 @@ DO $$
     END
 $$;
 
--- Create Keycloak role if it does not exist
-DO $$
-    BEGIN
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'keycloak') THEN
-            CREATE ROLE keycloak LOGIN PASSWORD 'keycloak';
-        END IF;
-    END
-$$;

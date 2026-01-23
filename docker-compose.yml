@@ -8,13 +8,31 @@ services:
       POSTGRES_USER: "${DB_USER}"
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME} -q"]
       interval: 5s
+      timeout: 10s
+      retries: 30
+
+  postgres_keycloak:
+    image: postgres:16
+    container_name: chat-postgres-keycloak
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${KC_DB_URL_DATABASE}"
+      POSTGRES_USER: "${KC_DB_USERNAME}"
+      POSTGRES_PASSWORD: "${KC_DB_PASSWORD}"
+    ports:
+      - "${KC_DB_PORT}:${DB_PORT}"
+    volumes:
+      - postgres_keycloak_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${KC_DB_USERNAME} -d ${KC_DB_URL_DATABASE} -q"]
+      interval: 1s
       timeout: 10s
       retries: 30
 
@@ -45,10 +63,10 @@ services:
       KC_DB: "${KC_DB}"
       KC_DB_URL_HOST: "${KC_DB_URL_HOST}"
       KC_DB_URL_DATABASE: "${KC_DB_URL_DATABASE}"
-      KC_DB_URL_PORT: "${KC_DB_PORT}"
+      KC_DB_URL_PORT: "${DB_PORT}"
       KC_DB_USERNAME: "${KC_DB_USERNAME}"
       KC_DB_PASSWORD: "${KC_DB_PASSWORD}"
-      KC_DB_SCHEMA: "${KC_DB_SCHEMA}"
+      KC_DB_SCHEMA: public
       KEYCLOAK_ADMIN: "${KEYCLOAK_ADMIN}"
       KEYCLOAK_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
       KC_HOSTNAME_URL: ${KC_HOSTNAME_URL}
@@ -58,14 +76,14 @@ services:
     ports:
       - "8081:8080"
     depends_on:
-      postgres:
+      postgres_keycloak:
         condition: service_started
       liquibase:
         condition: service_started
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ./keycloak:/opt/keycloak/data/import
-
 volumes:
   postgres_data:
+  postgres_keycloak_data:
   keycloak_data:
